@@ -1,0 +1,22 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# config directory
+config/
+
+# npm cache directory
+.npm
+
+# eslint cache
+.eslintcache
+
+# dotenv environment variables file
+.env
+
+# IDE cache
+.idea/
