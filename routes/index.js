@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    res.status(200);
+    res.status(200)
 });
 
 router.get('/new/:id', (req, res) => {

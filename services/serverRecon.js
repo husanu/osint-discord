@@ -23,7 +23,6 @@ const xSuperProperties = () => {
 
 const xProperties = (link) => {
   return new Promise( (resolve, reject) => {
-      console.log('https://discordapp.com/api/v6/invites/' + link);
       axios.get('https://discordapp.com/api/v6/invites/' + link).then(response => {
           if (response.status === 200) {
               resolve (Buffer.from(JSON.stringify({
@@ -43,26 +42,9 @@ const xProperties = (link) => {
 };
 
 module.exports = {
-    users: (token, guild) => {
-        return new Promise((resolve, reject) => {
-            const client = new discord.Client(); // We need to use WebSocket because API SUCKS
-            client.login(token).catch(err => {
-                reject ({'error':'token is rejected for some reason'})
-            });
-            client.on('ready', () => {
-                client.guilds.get(guild).fetchMembers().then(list => {
-                    list.members.forEach(member => {
-                        console.log(member.user); // TODO Store this
-                        client.destroy().catch(() => reject({'error':'could\'t destroy this fkin client'}))
-                    })
-                }).catch(err => {
-                    client.destroy().catch(() => reject({'error':'could\'t destroy this fkin client'}));
-                    reject({'error':'couldn\'t get users'});
-                    console.log(err)
-                });
-             })
-        });
-    },
+    /*
+    * Join method is used to check if a discord.gg/link is still UP. If it is, it joins.
+    */
     join: (token, link) => {
         return new Promise((resolve, reject) => {
             xProperties(link).then(header => {
@@ -88,5 +70,35 @@ module.exports = {
                 reject ({'error':err})
             });
         });
-    }
+    },
+    /*
+    * Users method request every users for a given guildID. If the bot is not in the guild, returns an error.
+    */
+    users: (token, guild) => {
+        return new Promise((resolve, reject) => {
+            const client = new discord.Client(); // We need to use WebSocket because API SUCKS
+            client.login(token).catch(err => {
+                reject ({'error':'token is rejected for some reason'})
+            });
+            client.on('ready', () => {
+                client.guilds.get(guild).fetchMembers().then(list => {
+                    const userObject = [];
+                    list.members.forEach(member => {
+                        // Since the settings object is only available for the bot, we don't parse it.
+                        if(!member.user.settings) {
+                            userObject.push({
+                                'id': member.user.id,
+                                'pseudo': member.user.username + '#' + member.user.discriminator
+                            });
+                        }
+                    });
+                    client.destroy().catch(() => reject({'error':'could\'t destroy this fkin client'}));
+                    resolve (userObject);
+                }).catch(err => {
+                    client.destroy().catch(() => reject({'error':'could\'t destroy this fkin client'}));
+                    reject({'error':'user is not in this guild'});
+                });
+             })
+        });
+    },
 };

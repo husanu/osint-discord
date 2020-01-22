@@ -5,12 +5,6 @@ const app = express();
 
 require('dotenv').config();
 
-// tokens.add('NjY3NTAzNzk4NzM0MDI4ODM5.XiDrlQ.vGol0urdQ6xZGt-FiXxeeJCtf1Y').then((res) => {
-//     console.log(res)
-// }).catch(err => {
-//     console.log(err)
-// });
-
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
