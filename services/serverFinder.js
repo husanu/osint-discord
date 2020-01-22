@@ -11,7 +11,7 @@ module.exports = {
             while (link.length <= 6) {
                 link += alphabet[Math.floor(Math.random() * alphabet.length)];
             }
-            link = 'Vn3Ncu';
+            link = 'zrA9tY';
             console.log('https://discord.gg/'+ link);
             axios.get('https://discordapp.com/api/invites/' + link).then(res => {
                 resolve ({'link':link, 'data':res.data});

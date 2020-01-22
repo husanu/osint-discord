@@ -5,14 +5,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    finder.bruteforce().then(guild => {
-        console.log(guild.link); //
-        finder.save(guild.link).then(created => {
-            console.log(created)
-        }).catch(err => {
-            console.log(err)
-        })
-    })
+    res.status(200);
 });
 
 router.get('/new/:id', (req, res) => {
@@ -21,10 +14,6 @@ router.get('/new/:id', (req, res) => {
     }).catch(err => {
         res.status(500).json(err)
     });
-});
-
-router.get('', (req, res) => {
-
 });
 
 module.exports = router;

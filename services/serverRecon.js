@@ -1,4 +1,5 @@
 const axios = require('axios');
+const discord = require('discord.js');
 const userAgent = require('user-agents');
 const agent = new userAgent().random().data;
 
@@ -22,6 +23,7 @@ const xSuperProperties = () => {
 
 const xProperties = (link) => {
   return new Promise( (resolve, reject) => {
+      console.log('https://discordapp.com/api/v6/invites/' + link);
       axios.get('https://discordapp.com/api/v6/invites/' + link).then(response => {
           if (response.status === 200) {
               resolve (Buffer.from(JSON.stringify({
@@ -41,17 +43,22 @@ const xProperties = (link) => {
 };
 
 module.exports = {
-    users: (token) => {
-        axios.get('http://discordapp.com/api/guilds/' + guildID +'/members/', {
-            headers: {
-                'Authorization': userToken,
-                'Content-Type':'application/json'
-            }
-        }).then(res => {
-            console.log(res)
-        }).catch(err => {
-            console.log(err)
-        })
+    users: (token, guild) => {
+        return new Promise((resolve, reject) => {
+            const client = new discord.Client(); // We need to use WebSocket because API SUCKS
+            client.login(token).catch(err => {
+                reject ({'error':'token is rejected for some reason'})
+            });
+            client.on('ready', () => {
+                client.guilds.get(guild).fetchMembers().then(list => {
+                    list.members.forEach(member => {
+                        console.log(member.user)
+                    })
+                }).catch(err => {
+                    console.log(err)
+                });
+             })
+        });
     },
     join: (token, link) => {
         return new Promise((resolve, reject) => {
@@ -59,7 +66,7 @@ module.exports = {
                 console.log(agent.userAgent);
                 axios.post('https://discordapp.com/api/v6/invites/' + link, {},{
                     headers:{
-                        'Authorization': token.value,
+                        'Authorization': token, //.value TODO WARNING,
                         'Content-Type':'application/json',
                         'User-Agent':agent.userAgent,
                         'Accept':'*/*',
