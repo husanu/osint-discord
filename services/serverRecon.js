@@ -52,9 +52,12 @@ module.exports = {
             client.on('ready', () => {
                 client.guilds.get(guild).fetchMembers().then(list => {
                     list.members.forEach(member => {
-                        console.log(member.user)
+                        console.log(member.user); // TODO Store this
+                        client.destroy().catch(() => reject({'error':'could\'t destroy this fkin client'}))
                     })
                 }).catch(err => {
+                    client.destroy().catch(() => reject({'error':'could\'t destroy this fkin client'}));
+                    reject({'error':'couldn\'t get users'});
                     console.log(err)
                 });
              })
