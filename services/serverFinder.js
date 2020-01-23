@@ -11,7 +11,6 @@ module.exports = {
             while (link.length <= 6) {
                 link += alphabet[Math.floor(Math.random() * alphabet.length)];
             }
-            link = 'zrA9tY';
             axios.get(process.env.API + '/invites/' + link).then(res => {
                 resolve ({'link':link, 'data':res.data});
             }).catch(err => {
