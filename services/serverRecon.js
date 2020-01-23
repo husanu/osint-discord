@@ -1,3 +1,4 @@
+const analyser = require('../utils/analyser');
 const axios = require('axios');
 const discord = require('discord.js');
 const userAgent = require('user-agents');
@@ -11,7 +12,7 @@ const xSuperProperties = () => {
         'browser_user_agent': agent.userAgent,
         'browser_version': (Math.random() * (999.99 - 1.0 + 1) + 1.0).toFixed(3),
         'os_version': '' + [10, 9, 8, 7][Math.floor(Math.random() * 4)],
-        'referrer': '',
+        'refercrer': '',
         'referring_domain': '',
         'referrer_current': '',
         'referring_domain_current': '',
@@ -23,21 +24,21 @@ const xSuperProperties = () => {
 
 const xProperties = (link) => {
   return new Promise( (resolve, reject) => {
-      axios.get('https://discordapp.com/api/v6/invites/' + link).then(response => {
+      axios.get(process.env.API + '/invites/' + link).then(response => {
           if (response.status === 200) {
               resolve (Buffer.from(JSON.stringify({
-                 'location':'Accept Invite Page',
-                 'location_guild_id':response.data.guild.id ,
-                 'location_channel_id':response.data.channel.id,
+                  'location':'Accept Invite Page',
+                  'location_guild_id':response.data.guild.id ,
+                  'location_channel_id':response.data.channel.id,
                   'location_channel_type':response.data.channel.type
               })).toString('base64'));
           }
           else {
-              reject ({'error': 'invalid response'})
+              reject({'error': 'invalid response'})
           }
       }).catch(err => {
-          reject ({'error': err})
-      })
+          reject({'error': err})
+      });
   })
 };
 
@@ -48,8 +49,7 @@ module.exports = {
     join: (token, link) => {
         return new Promise((resolve, reject) => {
             xProperties(link).then(header => {
-                console.log(agent.userAgent);
-                axios.post('https://discordapp.com/api/v6/invites/' + link, {},{
+                axios.post(process.env.API + '/invites/' + link,{},{
                     headers:{
                         'Authorization': token, //.value TODO WARNING,
                         'Content-Type':'application/json',
@@ -58,27 +58,27 @@ module.exports = {
                         'Accept-Language': 'en-US',
                         'X-Context-Properties':header,
                         'X-Super-Properties':xSuperProperties(),
-                        //TODO : 'X-FINGERPRINT'
+                        // TODO : 'X-FINGERPRINT'
                     }
                 }).then(res => {
-                    console.log(res);
-                    resolve ({'success': res})
+                    resolve(res.data)
                 }).catch(err => {
-                    reject ({'error':err})
-                })
+                    reject({'error':err})
+                });
             }).catch(err => {
-                reject ({'error':err})
+                reject({'error':err})
             });
         });
     },
     /*
     * Users method request every users for a given guildID. If the bot is not in the guild, returns an error.
+    * I'll refactor this later to avoid websocket.
     */
     users: (token, guild) => {
         return new Promise((resolve, reject) => {
-            const client = new discord.Client(); // We need to use WebSocket because API SUCKS
+            const client = new discord.Client(); // We need to use WebSocket because API SUCKS for unknown reasons
             client.login(token).catch(err => {
-                reject ({'error':'token is rejected for some reason'})
+                reject ({'error':'token is rejected for some reason'});
             });
             client.on('ready', () => {
                 client.guilds.get(guild).fetchMembers().then(list => {
@@ -93,12 +93,59 @@ module.exports = {
                         }
                     });
                     client.destroy().catch(() => reject({'error':'could\'t destroy this fkin client'}));
-                    resolve (userObject);
+                    resolve(userObject);
                 }).catch(err => {
                     client.destroy().catch(() => reject({'error':'could\'t destroy this fkin client'}));
                     reject({'error':'user is not in this guild'});
                 });
-             })
+             });
         });
     },
+    /*
+    * Inspect method search for every juicy ressources on specified server.
+    */
+    inspect: (token, guild) => {
+        return new Promise((resolve, reject) => {
+            axios.get(process.env.API + '/guilds/' + guild + '/channels', {
+                headers: {
+                    'Authorization': token,
+                    'Content-Type':'application/json'
+                }
+            }).then(res => {
+                const chatsID = [];
+                const results = [];
+                res.data.forEach(chat => {
+                    if (chat.type === 0) {
+                        chatsID.push(chat.id);
+                    }
+                });
+                const juicyThings = () => {
+                    return new Promise(done => {
+                        chatsID.forEach((chat, index, chats) => {
+                            axios.get(process.env.API + '/channels/' + chat + '/messages', {
+                                headers: {
+                                    'Authorization': token,
+                                    'Content-Type':'application/json'
+                                }
+                            }).then(response => {
+                                analyser.messages(response.data).then(messages => {
+                                    results.push(messages);
+                                });
+                                 if (index === chats.length -1) {
+                                     done(results)
+                                }
+                            }).catch(err => {
+                                console.warn('cannot read ' + chat + 'chat (missing permission)');
+                            });
+                        })
+                    })
+                };
+                 juicyThings().then(result => {
+                     resolve(result);
+                 })
+            }).catch(err => {
+                reject({'error':err});
+            });
+        });
+    }
 };
