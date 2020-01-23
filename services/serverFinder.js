@@ -12,7 +12,7 @@ module.exports = {
                 link += alphabet[Math.floor(Math.random() * alphabet.length)];
             }
             link = 'zrA9tY';
-            axios.get('https://discordapp.com/api/invites/' + link).then(res => {
+            axios.get(process.env.API + '/invites/' + link).then(res => {
                 resolve ({'link':link, 'data':res.data});
             }).catch(err => {
                 reject (err);
@@ -21,7 +21,7 @@ module.exports = {
     },
     save: (link) => {
         return new Promise ((resolve, reject) => {
-               axios.get('https://discordapp.com/api/v6/invites/' + link, {}).then(res => {
+               axios.get(process.env.API + '/invites/' + link, {}).then(res => {
                    models.Server.findOne({
                       where: { serverId: res.data.guild.id }
                    }).then(server => {
@@ -39,7 +39,7 @@ module.exports = {
                            }).catch(err => {
                                reject ({'error':'MySQL exception'})
                            })
-                       }
+                       } //TODO : MOVE THIS IN CONTROLLER FILE
                    }).catch(err => {
                        reject ({'error':err});
                    });

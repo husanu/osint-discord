@@ -12,11 +12,13 @@ router.get('/', (req, res) => {
         server.users(token, joined.guild.id).then(users => {
             console.table(users);
         }).catch(() => {
-            console.error('cannot list member');
+            console.error('cannot get list member');
         });
-        server.inspect(token, joined.guild.id).then(messages => {
-            messages.forEach(message => {
-                console.table(message);
+        server.inspect(token, joined.guild.id).then(chans => {
+            chans.forEach(chan => {
+                chan.forEach(message => {
+                    console.table(message);
+                });
             });
         }).catch(() => {
             console.error('cannot search messages');

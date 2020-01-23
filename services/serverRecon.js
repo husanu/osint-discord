@@ -102,7 +102,7 @@ module.exports = {
         });
     },
     /*
-    * Inspect method search for every juicy ressources on specified server.
+    * Inspect method search for every juicy ressources on the specified server.
     */
     inspect: (token, guild) => {
         return new Promise((resolve, reject) => {
@@ -113,36 +113,29 @@ module.exports = {
                 }
             }).then(res => {
                 const chatsID = [];
-                const results = [];
                 res.data.forEach(chat => {
                     if (chat.type === 0) {
                         chatsID.push(chat.id);
                     }
                 });
-                const juicyThings = () => {
-                    return new Promise(done => {
-                        chatsID.forEach((chat, index, chats) => {
-                            axios.get(process.env.API + '/channels/' + chat + '/messages', {
-                                headers: {
-                                    'Authorization': token,
-                                    'Content-Type':'application/json'
-                                }
-                            }).then(response => {
-                                analyser.messages(response.data).then(messages => {
-                                    results.push(messages);
-                                });
-                                 if (index === chats.length -1) {
-                                     done(results)
-                                }
-                            }).catch(err => {
-                                console.warn('cannot read ' + chat + 'chat (missing permission)');
-                            });
-                        })
+                const rawMessages = chatsID.map(chatID => {
+                    return axios.get(process.env.API + '/channels/' + chatID + '/messages', {
+                        headers: {
+                            'Authorization': token,
+                            'Content-Type':'application/json'
+                        }
                     })
-                };
-                 juicyThings().then(result => {
-                     resolve(result);
-                 })
+                });
+                Promise.allSettled(rawMessages).then(responses => {
+                    const juicyMessages = responses.map(response => {
+                        if (response.status ==='fulfilled') {
+                            return (analyser.messages(response.value.data));
+                        }
+                    });
+                    Promise.all(juicyMessages).then(juicyMessage => {
+                        resolve(juicyMessage);
+                    })
+                })
             }).catch(err => {
                 reject({'error':err});
             });
