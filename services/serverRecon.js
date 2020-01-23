@@ -12,7 +12,7 @@ const xSuperProperties = () => {
         'browser_user_agent': agent.userAgent,
         'browser_version': (Math.random() * (999.99 - 1.0 + 1) + 1.0).toFixed(3),
         'os_version': '' + [10, 9, 8, 7][Math.floor(Math.random() * 4)],
-        'refercrer': '',
+        'referrer': '',
         'referring_domain': '',
         'referrer_current': '',
         'referring_domain_current': '',
