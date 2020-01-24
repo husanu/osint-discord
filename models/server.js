@@ -1,10 +1,12 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Server = sequelize.define('Server', {
-    serverId: {
+    serverID: {
+      allowNull: false,
       type: DataTypes.STRING
     },
     link: {
+      allowNull: false,
       type: DataTypes.STRING
     },
     name: {

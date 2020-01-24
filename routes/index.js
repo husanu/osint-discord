@@ -1,32 +1,13 @@
-const server = require('../services/serverRecon');
-const finder = require('../services/serverFinder');
-const tokens = require('../services/tokens');
+// const finder = require('../services/serverFinder');
+// const tokens = require('../services/tokens');
+const controller = require('../controllers/index');
 const express = require('express');
 const router = express.Router();
 
-const token = '';
-const link = '';
 
-router.get('/', (req, res) => {
-    server.join(token,link).then(joined => {
-        server.users(token, joined.guild.id).then(users => {
-            console.table(users);
-        }).catch(() => {
-            console.error('cannot get list member');
-        });
-        server.inspect(token, joined.guild.id).then(chans => {
-            chans.forEach(chan => {
-                chan.forEach(message => {
-                    console.table(message);
-                });
-            });
-        }).catch(() => {
-            console.error('cannot search messages');
-        })
-    }).catch(err => {
-        console.error('invalid link');
-    });
-});
+router.post('/', controller.main);
+router.post('/user-info', controller.userInfo);
+router.post('/server-info', controller.serverInfo);
 
 router.get('/new/:id', (req, res) => {
     tokens.add(req.params.id).then(response => {

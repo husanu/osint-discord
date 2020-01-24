@@ -1,5 +1,5 @@
 # OSINT Project
-OSINT tool using `Discord API` to extract informations from discord servers
+OSINT tool using `Discord API` to extract informations from discord servers.
 ## Progress
 + ~~Connect to a server~~
 + ~~Extract users list~~

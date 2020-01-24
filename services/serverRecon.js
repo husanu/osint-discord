@@ -87,7 +87,7 @@ module.exports = {
                         // Since the settings object is only available for the bot, we don't parse it.
                         if(!member.user.settings) {
                             userObject.push({
-                                'id': member.user.id,
+                                'userID': member.user.id,
                                 'pseudo': member.user.username + '#' + member.user.discriminator
                                 //'activity': member.presence.game
                             });

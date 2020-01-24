@@ -2,6 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Token = sequelize.define('Token', {
     value: {
+      allowNull: false,
       type: DataTypes.STRING
     },
     userId:{

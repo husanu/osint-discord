@@ -22,14 +22,14 @@ module.exports = {
         return new Promise ((resolve, reject) => {
                axios.get(process.env.API + '/invites/' + link, {}).then(res => {
                    models.Server.findOne({
-                      where: { serverId: res.data.guild.id }
+                      where: { serverID: res.data.guild.id }
                    }).then(server => {
                        if (server) {
                            reject ({'error':'this server is already registered' })
                        }
                        else {
                            models.Server.create({
-                               serverId: res.data.guild.id,
+                               serverID: res.data.guild.id,
                                name: res.data.guild.name,
                                link: link,
                                parsed: false

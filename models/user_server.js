@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const User_Server = sequelize.define('User_Server', {
     user_id: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       references: {
         model: 'Users',
         key: 'id'
@@ -10,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     server_id: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       references: {
         model: 'Servers',
         key: 'id'
