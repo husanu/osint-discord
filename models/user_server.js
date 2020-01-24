@@ -1,8 +1,20 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const User_Server = sequelize.define('User_Server', {
-    user_id: DataTypes.INTEGER,
-    server_id: DataTypes.INTEGER
+    user_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Users',
+        key: 'id'
+      }
+    },
+    server_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Servers',
+        key: 'id'
+      }
+    }
   }, {});
   User_Server.associate = function(models) {
     // associations can be defined here

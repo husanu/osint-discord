@@ -51,7 +51,7 @@ module.exports = {
             xProperties(link).then(header => {
                 axios.post(process.env.API + '/invites/' + link,{},{
                     headers:{
-                        'Authorization': token, //.value TODO WARNING,
+                        'Authorization': token,
                         'Content-Type':'application/json',
                         'User-Agent':agent.userAgent,
                         'Accept':'*/*',
@@ -89,6 +89,7 @@ module.exports = {
                             userObject.push({
                                 'id': member.user.id,
                                 'pseudo': member.user.username + '#' + member.user.discriminator
+                                //'activity': member.presence.game
                             });
                         }
                     });
@@ -127,12 +128,12 @@ module.exports = {
                     })
                 });
                 Promise.allSettled(rawMessages).then(responses => {
-                    const juicyMessages = responses.map(response => {
+                    const juicyObject = responses.map(response => {
                         if (response.status ==='fulfilled') {
                             return (analyser.messages(response.value.data));
                         }
                     });
-                    Promise.all(juicyMessages).then(juicyMessage => {
+                    Promise.all(juicyObject).then(juicyMessage => {
                         resolve(juicyMessage);
                     })
                 })
