@@ -14,7 +14,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
   User.associate = function(models) {
-    // associations can be defined here
+    User.belongsTo(models.Server, {
+      through: 'User_Servers',
+      //as: 'servers',
+      foreignKey: 'userID',
+      otherKey: 'serverID'
+    });
   };
   return User;
 };

@@ -17,7 +17,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {});
   Server.associate = function(models) {
-    // associations can be defined here
+    Server.belongsToMany(models.User, {
+      through: 'User_Servers',
+      //as: 'users',
+      foreignKey: 'serverID',
+      otherKey: 'userID'
+    })
   };
   return Server;
 };

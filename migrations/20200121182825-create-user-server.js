@@ -10,19 +10,11 @@ module.exports = {
       },
       user_id: {
         allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Users',
-          key: 'id'
-        }
+        type: Sequelize.STRING
       },
       server_id: {
         allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Servers',
-          key: 'id'
-        }
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
