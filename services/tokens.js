@@ -5,7 +5,7 @@ module.exports = {
     add: (token) => {
         return new Promise((resolve, reject) => {
             axios.get(
-                'https://discordapp.com/api/users/@me',
+                process.env.API + '/users/@me',
                 {headers: {
                         'Authorization':token,
                         'Content-Type':'application/json'

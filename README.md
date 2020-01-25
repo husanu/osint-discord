@@ -5,8 +5,8 @@ OSINT tool using `Discord API` to extract informations from discord servers.
 + ~~Extract users list~~
 + ~~Search for socials~~
 + ~~Search for sensitive data~~
-+ Bruteforce invitation links
-+ Index every users/servers
++ ~~Index every users/servers~~
++ Bruteforce invitation links | *working on it*
 + Use a proxy to avoid `Too many requests`
 + Handle multiple tokens
 + Allow everyone to crawl a given server
@@ -31,22 +31,6 @@ API             =
     "username": "root",
     "password": null,
     "database": "database_develoment",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
-    "operatorsAliases": false
-  },
-  "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
-    "operatorsAliases": false
-  },
-  "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "operatorsAliases": false
