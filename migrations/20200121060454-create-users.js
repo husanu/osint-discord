@@ -15,10 +15,42 @@ module.exports = {
       },
       pseudo: {
         allowNull: false,
-        charset: 'utf8',
         type: Sequelize.STRING
       },
       status: {
+        type: Sequelize.STRING
+      },
+      avatar: {
+        type: Sequelize.STRING
+      },
+      twitch: {
+        type: Sequelize.STRING
+      },
+      youtube: {
+        type: Sequelize.STRING
+      },
+      battlenet: {
+        type: Sequelize.STRING
+      },
+      steam: {
+        type: Sequelize.STRING
+      },
+      reddit: {
+        type: Sequelize.STRING
+      },
+      facebook: {
+        type: Sequelize.STRING
+      },
+      twitter: {
+        type: Sequelize.STRING
+      },
+      spotify: {
+        type: Sequelize.STRING
+      },
+      xbox: {
+        type: Sequelize.STRING
+      },
+      leagueoflegends: {
         type: Sequelize.STRING
       },
       createdAt: {

@@ -84,11 +84,12 @@ module.exports = {
                 client.guilds.get(guild).fetchMembers().then(list => {
                     const userObject = [];
                     list.members.forEach(member => {
-                        // Since the settings object is only available for the bot, we don't parse it.
+                        // Since the settings object is only available for the bot, we don't parse it. 1000
                         if(!member.user.settings) {
                             userObject.push({
                                 'userID': member.user.id,
-                                'pseudo': member.user.username + '#' + member.user.discriminator
+                                'pseudo': member.user.username + '#' + member.user.discriminator,
+                                'avatar': member.user.avatar
                                 //'activity': member.presence.game
                             });
                         }
@@ -140,6 +141,31 @@ module.exports = {
             }).catch(err => {
                 reject({'error':err});
             });
+        });
+    },
+    /*
+    * Profile method search for a user and extract its informations.
+    */
+    profile : (token, userID) => {
+        return new Promise ((resolve, reject) => {
+            axios.get(process.env.API + '/users/' + userID + '/profile', {
+                headers: {
+                    'Authorization': token,
+                    'Content-Type':'application/json'
+                }
+            }).then(profile => {
+                const linkObject = {};
+                linkObject.userID = profile.data.user.id;
+                linkObject.update = {};
+                profile.data.connected_accounts.forEach(links => {
+                    if (links.type) {
+                        linkObject.update[links.type] = links.name;
+                    }
+                    resolve(linkObject);
+                });
+            }).catch(err => {
+                reject(err);
+            })
         });
     }
 };

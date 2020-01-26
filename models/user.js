@@ -11,6 +11,39 @@ module.exports = (sequelize, DataTypes) => {
     },
     status: {
       type: DataTypes.STRING
+    },
+    avatar: {
+      type: DataTypes.STRING
+    },
+    twitch: {
+      type: DataTypes.STRING
+    },
+    youtube: {
+      type: DataTypes.STRING
+    },
+    battlenet: {
+      type: DataTypes.STRING
+    },
+    steam: {
+      type: DataTypes.STRING
+    },
+    reddit: {
+      type: DataTypes.STRING
+    },
+    facebook: {
+      type: DataTypes.STRING
+    },
+    twitter: {
+      type: DataTypes.STRING
+    },
+    spotify: {
+      type: DataTypes.STRING
+    },
+    xbox: {
+      type: DataTypes.STRING
+    },
+    leagueoflegends: {
+      type: DataTypes.STRING
     }
   }, {});
   User.associate = function(models) {

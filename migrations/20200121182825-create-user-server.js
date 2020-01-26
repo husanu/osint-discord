@@ -24,6 +24,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
+    }, {
+      uniqueKeys: {
+        User_Servers_unique: {
+          fields: ['user_id', 'server_id']
+        }
+      }
     });
   },
   down: (queryInterface, Sequelize) => {

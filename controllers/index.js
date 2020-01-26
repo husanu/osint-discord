@@ -2,7 +2,7 @@ const server = require('../services/serverRecon');
 const models = require('../models');
 
 const token = '';
-const link = 'developers';
+const link = '';
 
 module.exports = {
     main: (req, res) => {
@@ -29,7 +29,9 @@ module.exports = {
                                 server_id: joined.guild.id
                                 })
                             });
-                            models.User_Server.bulkCreate(users).then(() => {
+                            models.User_Server.bulkCreate(users, {
+                                updateOnDuplicate: ["user_id", "server_id", "updatedAt"]
+                            }).then(() => {
                                //res.status(200).json({'beautiful':'everything worked'})
                             });
                         })
@@ -65,7 +67,7 @@ module.exports = {
                 { serverID: req.body.serverID }
             ]
             }).then((server) => {
-                models.User_Servers.findAll({
+                models.User_Server.findAll({
                     where: {
                         server_id: server.id
                     }
@@ -83,8 +85,38 @@ module.exports = {
         }
     },
     userInfo : (req, res) => {
+        let UID = ""; let SIDS = [];
         models.User.findOne({
-            //TODO: Later bitches
-        })
+        where: { userID: req.body.userID } // TODO : Also search for req.body.PSEUDO
+        }).then(user => {
+            UID = user.userID;
+            return models.User_Server.findAll({
+                where: {user_id: UID}
+            })
+        }).then((servers) => {
+            servers.forEach(serv => {
+                SIDS.push(serv.server_id);
+            });
+            return models.Server.findAll({
+                where: {serverID: SIDS}
+            })
+        }).then(guild => {
+            const connect = (index) => {
+                server.join(token, guild[index].link).then(joined => {
+                    server.profile(token, UID).then(profile => {
+                        models.User.update( profile.update , { where: { userID: UID }})
+                    }).catch(err => {
+                        // TODO MAKE A NICE ERROR HANDLER
+                    })
+                }).catch(err => {
+                    index < guild.length ? connect(++index) : console.log("No available server for this user");
+                })
+            };
+            connect(0);
+        }).then(() => {
+            // SEND RESPONSE TO CLIENT
+        }).catch(err => {
+            res.status(500).json({'error':''});
+        });
     }
 };
