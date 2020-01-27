@@ -1,5 +1,6 @@
 const axios = require('axios');
 const models = require('../models');
+const server = require('../services/serverFinder');
 
 module.exports = {
     add: (token) => {
@@ -31,6 +32,26 @@ module.exports = {
             }).catch(err => {
                 reject ({'error':'invalid token'})
             })
+        });
+    },
+    get: () => {
+        return new Promise((resolve, reject) => {
+            const checkToken = async () => {
+                try {
+                    const token = await models.Token.findOne();
+                    try {
+                        await server.join(token, 'EZGVjZS')
+                    } catch (err) {
+                        await token.destroy();
+                        await checkToken()
+                    }
+                } catch (err) {
+                    reject ({'error':'no more token'})
+                }
+            };
+            checkToken().then(token => {
+                resolve(token)
+            }).catch()
         });
     }
 };

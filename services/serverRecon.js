@@ -90,7 +90,6 @@ module.exports = {
                                 'userID': member.user.id,
                                 'pseudo': member.user.username + '#' + member.user.discriminator,
                                 'avatar': member.user.avatar
-                                //'activity': member.presence.game
                             });
                         }
                     });
@@ -158,7 +157,7 @@ module.exports = {
                 linkObject.userID = profile.data.user.id;
                 linkObject.update = {};
                 profile.data.connected_accounts.forEach(links => {
-                    if (links.type) {
+                    if (links.typle) {
                         linkObject.update[links.type] = links.name;
                     }
                     resolve(linkObject);

@@ -20,31 +20,31 @@ module.exports = {
     },
     save: (link) => {
         return new Promise ((resolve, reject) => {
-               axios.get(process.env.API + '/invites/' + link, {}).then(res => {
-                   models.Server.findOne({
-                      where: { serverID: res.data.guild.id }
-                   }).then(server => {
-                       if (server) {
-                           reject ({'error':'this server is already registered' })
-                       }
-                       else {
-                           models.Server.create({
-                               serverID: res.data.guild.id,
-                               name: res.data.guild.name,
-                               link: link,
-                               parsed: false
-                           }).then(newServ => {
-                               resolve ({'success':newServ});
-                           }).catch(err => {
-                               reject ({'error':'MySQL exception'})
-                           })
-                       } //TODO : MOVE THIS IN CONTROLLER FILE
-                   }).catch(err => {
-                       reject ({'error':err});
-                   });
-               }).catch(err => {
-                   console.log(err)
-               })
+            axios.get(process.env.API + '/invites/' + link, {}).then(res => {
+                models.Server.findOne({
+                   where: { serverID: res.data.guild.id }
+                }).then(server => {
+                    if (server) {
+                        reject ({'error':'this server is already registered' })
+                    }
+                    else {
+                        models.Server.create({
+                            serverID: res.data.guild.id,
+                            name: res.data.guild.name,
+                            link: link,
+                            parsed: false
+                        }).then(newServ => {
+                            resolve ({'success':newServ});
+                        }).catch(err => {
+                            reject ({'error':'MySQL exception'})
+                        })
+                    } //TODO : MOVE THIS IN CONTROLLER FILE
+                }).catch(err => {
+                    reject ({'error':err});
+                });
+            }).catch(err => {
+                console.log(err)
+            })
         })
     }
 };

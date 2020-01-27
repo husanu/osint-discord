@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = function(models) {
     User.belongsTo(models.Server, {
       through: 'User_Servers',
-      //as: 'servers',
+      as: 'servers',
       foreignKey: 'userID',
       otherKey: 'serverID'
     });

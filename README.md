@@ -6,10 +6,11 @@ OSINT tool using `Discord API` to extract informations from discord servers.
 + ~~Search for socials~~
 + ~~Search for sensitive data~~
 + ~~Index every users/servers~~
-+ Bruteforce invitation links | *working on it*
++ ~~Handle multiple tokens~~
++ ~~Allow everyone to crawl a given server~~
++ Bruteforce invitation links / 
+*working on it in another workspace*
 + Use a proxy to avoid `Too many requests`
-+ Handle multiple tokens
-+ Allow everyone to crawl a given server
 + And many more...
 ## Install
 It still in development. I highly recommand you to wait a stable version. 
